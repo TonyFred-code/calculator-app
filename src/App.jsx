@@ -1,10 +1,12 @@
 import { useState } from "react";
 import {
+  BUTTON_CLASSES,
   BUTTON_KEY_MAPPING,
   CALCULATION_ERROR,
   DECIMAL_POINT,
   INITIAL_DISPLAY,
   MAX_DISPLAY_CHAR_LENGTH,
+  OPERATORS,
 } from "./constants/calculator.js";
 
 export default function App() {
@@ -92,23 +94,21 @@ export default function App() {
   }
 
   function handleButtonClick(type, value) {
-    console.log(type, value);
-
     switch (value) {
-      case "+":
-      case "-":
-      case "/":
-      case "*":
+      case OPERATORS.plus:
+      case OPERATORS.minus:
+      case OPERATORS.divide:
+      case OPERATORS.times:
         break;
-      case "=":
+      case OPERATORS.equals:
         break;
-      case ".":
+      case DECIMAL_POINT:
         inputDecimal(value);
         break;
-      case "RESET":
+      case OPERATORS.reset:
         resetCalculator();
         break;
-      case "DEL":
+      case OPERATORS.delete:
         handleDel();
         break;
       default:
@@ -170,14 +170,14 @@ export default function App() {
         {/* KEYPAD */}
         <div className="keypad bg-keypad-bg grid gap-3 p-5 rounded-xl">
           {BUTTON_KEY_MAPPING.map((buttonKey) => {
-            const { value, type, area } = buttonKey;
+            const { value, type, area, symbol } = buttonKey;
 
             return (
               <button
                 key={value}
                 className={`${type}-type grid-area-${String(area).toLowerCase()}`}
                 onClick={() => {
-                  handleButtonClick(type, value);
+                  handleButtonClick(symbol);
                 }}
               >
                 {value}
