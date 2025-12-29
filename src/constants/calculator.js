@@ -19,6 +19,13 @@ const OPERATORS = {
   reset: "reset",
   equals: "=",
 };
+const OPERAND_MODES = {
+  WAITING_SECOND: "waiting_for_second_operand",
+  TYPING_SECOND: "typing_second_operand",
+  WAITING_FIRST: "waiting_for_first_operand",
+  TYPING_FIRST: "typing_first_operand",
+};
+
 const BUTTON_KEY_MAPPING = [
   {
     value: 1,
@@ -137,4 +144,5 @@ export {
   MAX_DISPLAY_CHAR_LENGTH,
   BUTTON_KEY_MAPPING,
   BUTTON_CLASSES,
+  OPERAND_MODES,
 };
