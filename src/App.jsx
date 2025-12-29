@@ -187,6 +187,23 @@ export default function App() {
     }
   }
 
+  function handleEquals() {
+    if (firstOperand !== null && operator && secondOperand !== null) {
+      try {
+        const result = calculate(firstOperand, operator, secondOperand);
+
+        setFirstOperand(result);
+        setDisplayedValue(`${result}`);
+        setOperator(null);
+        setSecondOperand(null);
+        setOperandMode(OPERAND_MODES.TYPING_FIRST);
+      } catch (error) {
+        setDisplayedValue(error.message);
+        setOperandMode(OPERAND_MODES.WAITING_FIRST);
+      }
+    }
+  }
+
   function handleButtonClick(value) {
     switch (value) {
       case OPERATORS.plus:
@@ -196,6 +213,7 @@ export default function App() {
         handleOperators(value);
         break;
       case OPERATORS.equals:
+        handleEquals();
         break;
       case DECIMAL_POINT:
         inputDecimal(value);
