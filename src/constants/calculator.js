@@ -10,6 +10,15 @@ const BUTTON_CLASSES = {
   OPERATOR: "operator",
   DECIMAL_POINT: "decimal_point",
 };
+const OPERATORS = {
+  times: "*",
+  divide: "/",
+  plus: "+",
+  minus: "-",
+  delete: "del",
+  reset: "reset",
+  equals: "=",
+};
 const BUTTON_KEY_MAPPING = [
   {
     value: 1,
@@ -120,16 +129,6 @@ const BUTTON_KEY_MAPPING = [
     symbol: OPERATORS.equals,
   },
 ];
-const OPERATORS = {
-  times: "*",
-  divide: "/",
-  plus: "+",
-  minus: "-",
-  delete: "del",
-  reset: "reset",
-  equals: "=",
-};
-
 export {
   OPERATORS,
   INITIAL_DISPLAY,
