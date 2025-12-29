@@ -6,70 +6,101 @@ import {
   DECIMAL_POINT,
   INITIAL_DISPLAY,
   MAX_DISPLAY_CHAR_LENGTH,
+  OPERAND_MODES,
   OPERATORS,
 } from "./constants/calculator.js";
+import calculate from "./helpers/calculate.js";
 
 export default function App() {
   const [firstOperand, setFirstOperand] = useState(0);
   const [displayedValue, setDisplayedValue] = useState(INITIAL_DISPLAY);
   const [secondOperand, setSecondOperand] = useState(null);
   const [operator, setOperator] = useState(null);
-  const [waitingForSecondOperand, setWaitingForSecondOperand] = useState(false);
+  const [operandMode, setOperandMode] = useState(OPERAND_MODES.WAITING_FIRST);
 
   function resetCalculator() {
-    setDisplayedValue("0");
+    setDisplayedValue(INITIAL_DISPLAY);
     setFirstOperand(null);
     setSecondOperand(null);
     setOperator(null);
+    setOperandMode(OPERAND_MODES.WAITING_FIRST);
   }
 
   function inputDigit(digit) {
-    if (displayedValue.length >= MAX_DISPLAY_CHAR_LENGTH) {
+    const hasError = displayedValue.match(/error/i);
+
+    if (!hasError && displayedValue.length >= MAX_DISPLAY_CHAR_LENGTH) {
       alert("Maximum display characters length reached");
       return;
     }
 
-    if (displayedValue === "MATH ERROR") {
+    let updatedDisplayValue,
+      updatedOperandMode = operandMode;
+
+    if (hasError) {
       resetCalculator();
-      setDisplayedValue(`${digit}`);
-    } else if (displayedValue === "0") {
-      setDisplayedValue(`${digit}`);
-    } else if (displayedValue === "-") {
-      setDisplayedValue(`-${digit}`);
-    } else if (Number(displayedValue) === firstOperand && operator !== null) {
-      setDisplayedValue(`${digit}`);
+      updatedDisplayValue = `${digit}`;
+      updatedOperandMode = OPERAND_MODES.TYPING_FIRST;
+    } else if (operandMode === OPERAND_MODES.WAITING_FIRST) {
+      updatedDisplayValue = `${digit}`;
+      updatedOperandMode = OPERAND_MODES.TYPING_FIRST;
+    } else if (operandMode === OPERAND_MODES.WAITING_SECOND) {
+      updatedDisplayValue = `${digit}`;
+      updatedOperandMode = OPERAND_MODES.TYPING_SECOND;
     } else {
-      setDisplayedValue(`${displayedValue}${digit}`);
+      updatedDisplayValue = `${displayedValue}${digit}`;
     }
 
-    if (operator && firstOperand !== null) {
-      setSecondOperand(Number(displayedValue));
-    } else {
-      setFirstOperand(Number(displayedValue));
+    if (updatedOperandMode === OPERAND_MODES.TYPING_FIRST) {
+      setFirstOperand(Number(updatedDisplayValue));
     }
+
+    if (updatedOperandMode === OPERAND_MODES.TYPING_SECOND) {
+      setSecondOperand(Number(updatedDisplayValue));
+    }
+
+    setDisplayedValue(updatedDisplayValue);
+    setOperandMode(updatedOperandMode);
   }
 
   function handleDel() {
-    if (displayedValue === INITIAL_DISPLAY) return;
+    if (operandMode === OPERAND_MODES.WAITING_FIRST) return;
 
-    if (displayedValue === CALCULATION_ERROR) {
+    if (displayedValue.match(/error/i)) {
       resetCalculator();
       return;
     }
 
-    const updatedDisplayValue = `${displayedValue.slice(0, -1)}`;
+    if (operandMode === OPERAND_MODES.WAITING_SECOND) {
+      setOperator(null);
+      setDisplayedValue(firstOperand);
+      setOperandMode(OPERAND_MODES.TYPING_FIRST);
+      return;
+    }
 
-    if (displayedValue === "") {
+    const updatedDisplayValue = `${displayedValue.slice(0, -1)}`;
+    let updatedOperandMode = operandMode;
+
+    if (updatedDisplayValue === "") {
       setDisplayedValue(INITIAL_DISPLAY);
+      if (operandMode === OPERAND_MODES.TYPING_FIRST) {
+        updatedOperandMode = OPERAND_MODES.WAITING_FIRST;
+      }
+
+      if (operandMode === OPERAND_MODES.TYPING_SECOND) {
+        updatedOperandMode = OPERAND_MODES.WAITING_SECOND;
+      }
     } else {
       setDisplayedValue(updatedDisplayValue);
     }
 
-    if (secondOperand === null) {
+    if (operandMode === OPERAND_MODES.TYPING_FIRST) {
       setFirstOperand(Number(updatedDisplayValue));
-    } else if (operator && firstOperand !== null) {
+    } else if (operandMode === OPERAND_MODES.TYPING_SECOND) {
       setSecondOperand(Number(updatedDisplayValue));
     }
+
+    setOperandMode(updatedOperandMode);
   }
 
   function inputDecimal() {
@@ -78,27 +109,84 @@ export default function App() {
       return;
     }
 
-    if (displayedValue === "MATH ERROR") {
-      resetCalculator();
-    }
+    if (displayedValue.includes(DECIMAL_POINT)) return;
 
-    if (waitingForSecondOperand && secondOperand === null) {
-      setWaitingForSecondOperand(false);
-      setDisplayedValue(INITIAL_DISPLAY);
+    let updatedDisplayValue = `${displayedValue}.`,
+      updatedOperandMode = operandMode;
+
+    if (operandMode === OPERAND_MODES.WAITING_FIRST) {
+      updatedOperandMode = OPERAND_MODES.TYPING_FIRST;
       return;
     }
 
-    if (!displayedValue.includes(DECIMAL_POINT)) {
-      setDisplayedValue(`${displayedValue}${DECIMAL_POINT}`);
+    if (operandMode === OPERAND_MODES.WAITING_SECOND) {
+      updatedOperandMode = OPERAND_MODES.TYPING_SECOND;
+      return;
+    }
+
+    setDisplayedValue(updatedDisplayValue);
+    setOperandMode(updatedOperandMode);
+
+    if (updatedOperandMode === OPERAND_MODES.TYPING_FIRST) {
+      setFirstOperand(Number(updatedDisplayValue));
+    }
+
+    if (updatedOperandMode === OPERAND_MODES.TYPING_SECOND) {
+      setSecondOperand(Number(updatedDisplayValue));
     }
   }
 
-  function handleButtonClick(type, value) {
+  function handleOperators(nextOperator) {
+    if (
+      nextOperator === OPERATORS.minus &&
+      operandMode === OPERAND_MODES.WAITING_FIRST
+    ) {
+      setDisplayedValue("-0");
+      setFirstOperand(-0);
+      setOperandMode(OPERAND_MODES.TYPING_FIRST);
+      return;
+    }
+
+    if (operandMode === OPERAND_MODES.WAITING_FIRST) {
+      // alert user to input a number first;
+      alert("Input a number first!");
+      return;
+    }
+
+    if (operandMode === OPERAND_MODES.TYPING_FIRST) {
+      setOperator(nextOperator);
+      setOperandMode(OPERAND_MODES.WAITING_SECOND);
+      return;
+    }
+
+    if (operandMode === OPERAND_MODES.WAITING_SECOND) {
+      setOperator(nextOperator);
+      return;
+    }
+
+    if (firstOperand !== null && operator && secondOperand !== null) {
+      try {
+        const result = calculate(firstOperand, operator, secondOperand);
+
+        setFirstOperand(result);
+        setDisplayedValue(`${result}`);
+        setOperator(nextOperator);
+        setSecondOperand(null);
+        setOperandMode(OPERAND_MODES.WAITING_SECOND);
+      } catch (error) {
+        setDisplayedValue(error.message);
+        setOperandMode(OPERAND_MODES.WAITING_FIRST);
+      }
+    }
+  }
+
+  function handleButtonClick(value) {
     switch (value) {
       case OPERATORS.plus:
       case OPERATORS.minus:
       case OPERATORS.divide:
       case OPERATORS.times:
+        handleOperators(value);
         break;
       case OPERATORS.equals:
         break;
@@ -119,7 +207,9 @@ export default function App() {
   }
 
   function formatDisplay(value) {
-    if (value === INITIAL_DISPLAY) return value;
+    if (value === INITIAL_DISPLAY || value === OPERATORS.minus) return value;
+
+    if (value.match(/error/i)) return value;
 
     const [int, dec] = value.split(".");
     const formattedInt = new Intl.NumberFormat("en-US").format(int);
