@@ -1,1 +1,171 @@
+@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Overpass:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
 @import "tailwindcss";
+
+@theme {
+  /* ---- FONTS ---- */
+  --font-league-spartan: "League Spartan", sans-serif;
+
+  /* ---- COLORS ---- */
+  --color-main-bg: var(--main-bg);
+  --color-toggle-bg: var(--toggle-bg);
+  --color-keypad-bg: var(--keypad-bg);
+  --color-screen-bg: var(--screen-bg);
+
+  --color-function-key-bg: var(--function-key-bg);
+
+  --color-equals-key-red-bg: var(--equals-key-red-bg);
+  --color-toggle-knob-bg: var(--toggle-knob-bg);
+
+  --color-number-key-bg: var(--number-key-bg);
+
+  --shadow-button-key: 0 2.8px 0 var(--button-key-shadow);
+}
+
+@layer base {
+  html,
+  body {
+    font-family: var(--font-league-spartan);
+  }
+
+  /* NAVY - THEME 1 */
+  .navy {
+    /* BACKGROUNDS */
+    --main-bg: hsl(222, 26%, 31%); /* Navy 850 */
+    --toggle-bg: hsl(223, 31%, 20%); /* Navy 900 */
+    --keypad-bg: hsl(
+      223,
+      31%,
+      20%
+    ); /* Navy 900 -- i know it is the same color */
+    --screen-bg: hsl(224, 36%, 15%); /* Navy 950 */
+
+    /* KEYS */
+    --function-key-bg: hsl(225, 21%, 49%);
+    --equals-key-red-bg: hsl(6, 63%, 50%);
+    --toggle-knob-bg: hsl(6, 63%, 50%);
+    --number-key-bg: hsl(0, 0%, 90%);
+
+    /* TEXT */
+    /* -- */
+  }
+
+  /* GRAY - THEME 2 */
+  .gray {
+  }
+
+  /* PURPLE - THEME 3 */
+  .purple {
+  }
+}
+
+.keypad {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr) 1.2fr;
+  grid-template-areas:
+    "seven eight nine del"
+    "four five six plus"
+    "one two three minus"
+    "dot zero divide times"
+    "reset reset equals equals";
+}
+
+.keypad button {
+  @apply cursor-pointer shadow-button-key rounded-md text-xl flex items-center justify-center py-2 px-1;
+}
+
+.number-type,
+.operator-type,
+.decimal_point-type {
+  --button-key-shadow: hsl(28, 16%, 65%);
+
+  @apply rounded-md bg-number-key-bg text-main-bg font-bold;
+}
+
+.equals-type {
+  --button-key-shadow: hsl(6, 70%, 34%);
+
+  @apply bg-equals-key-red-bg text-white;
+}
+
+.function-type {
+  --button-key-shadow: hsl(224, 28%, 35%);
+
+  @apply bg-function-key-bg text-white;
+}
+
+.operator-type {
+  @apply text-xl;
+}
+
+.grid-area-one {
+  grid-area: one;
+}
+
+.grid-area-two {
+  grid-area: two;
+}
+
+.grid-area-three {
+  grid-area: three;
+}
+
+.grid-area-four {
+  grid-area: four;
+}
+
+.grid-area-five {
+  grid-area: five;
+}
+
+.grid-area-six {
+  grid-area: six;
+}
+
+.grid-area-seven {
+  grid-area: seven;
+}
+
+.grid-area-eight {
+  grid-area: eight;
+}
+
+.grid-area-nine {
+  grid-area: nine;
+}
+
+.grid-area-zero {
+  grid-area: zero;
+}
+
+.grid-area-plus {
+  grid-area: plus;
+}
+
+.grid-area-minus {
+  grid-area: minus;
+}
+
+.grid-area-times {
+  grid-area: times;
+}
+
+.grid-area-divide {
+  grid-area: divide;
+}
+
+.grid-area-del {
+  grid-area: del;
+}
+
+.grid-area-dot {
+  grid-area: dot;
+}
+
+.grid-area-reset {
+  grid-area: reset;
+}
+
+.grid-area-equals {
+  grid-area: equals;
+}
