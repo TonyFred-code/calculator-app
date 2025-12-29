@@ -137,6 +137,13 @@ export default function App() {
   }
 
   function handleOperators(nextOperator) {
+    if (displayedValue === "-0" && nextOperator === OPERATORS.minus) {
+      setDisplayedValue(INITIAL_DISPLAY);
+      setFirstOperand(0);
+      setOperandMode(OPERAND_MODES.WAITING_FIRST);
+      return;
+    }
+
     if (
       nextOperator === OPERATORS.minus &&
       operandMode === OPERAND_MODES.WAITING_FIRST
