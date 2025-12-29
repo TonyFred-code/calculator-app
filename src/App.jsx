@@ -68,7 +68,7 @@ export default function App() {
     if (secondOperand === null) {
       setFirstOperand(Number(updatedDisplayValue));
     } else if (operator && firstOperand !== null) {
-      setSecondOperand(Number(displayedValue));
+      setSecondOperand(Number(updatedDisplayValue));
     }
   }
 
