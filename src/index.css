@@ -1,0 +1,188 @@
+@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Overpass:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+@custom-variant purple (&:where([data-theme=purple], [data-theme=purple] *));
+
+@theme {
+  /* ---- FONTS ---- */
+  --font-league-spartan: "League Spartan", sans-serif;
+
+  /* ---- COLORS ---- */
+  /* THEME 1 */
+  /* BACKGROUNDS */
+  --color-navy-850: hsl(222, 26%, 31%);
+  --color-navy-900: hsl(223, 31%, 20%);
+  --color-navy-950: hsl(224, 36%, 15%);
+  /* KEYS */
+  --color-navy-700: hsl(225, 21%, 49%);
+  --color-navy-800: hsl(224, 28%, 35%);
+
+  --color-red-600: hsl(6, 63%, 50%);
+  --color-red-800: hsl(6, 70%, 34%);
+
+  --color-gray-200: hsl(0, 0%, 90%);
+  --color-gray-orange-400: hsl(28, 16%, 65%);
+  /* TEXT */
+  --color-navy-750: hsl(221, 14%, 31%);
+  --color-white: hsl(0, 100%, 100%);
+
+  /* THEME 2 */
+  /* BACKGROUNDS */
+  --color-gray-200: hsl(0, 0%, 90%);
+  --color-gray-300: hsl(0, 5%, 81%);
+  --color-gray-100: hsl(0, 0%, 93%);
+  /*  KEYS */
+  --color-blue-500: hsl(185, 42%, 37%);
+  --color-blue-600: hsl(185, 58%, 25%);
+
+  --color-orange-700: hsl(25, 98%, 40%);
+  --color-orange-800: hsl(25, 99%, 27%);
+
+  --color-grey-200: hsl(0, 0%, 90%);
+  --color-grey-orange-450: hsl(35, 11%, 61%);
+  /* TEXT */
+  --color-gray-900: hsl(60, 10%, 19%);
+
+  /* THEME 3 */
+  /* BACKGROUNDS */
+  --color-purple-950: hsl(268, 75%, 9%);
+  --color-purple-900: hsl(268, 71%, 12%);
+
+  /* KEYS */
+  --color-purple-800: hsl(281, 89%, 26%);
+  --color-purple-400: hsl(285, 91%, 52%);
+
+  --color-cyan-500: hsl(176, 100%, 44%);
+  --color-cyan-400: hsl(177, 92%, 70%);
+
+  --color-purple-850: hsl(268, 47%, 21%);
+  --color-purple-750: hsl(290, 70%, 36%);
+  /* TEXT */
+  --color-yellow-300: hsl(52, 100%, 62%);
+  --color-blue-950: hsl(198, 20%, 13%);
+
+  /* ---- BOX SHADOW ---- */
+  --shadow-key: 0 2.8px 0;
+}
+
+@layer base {
+  html,
+  body {
+    font-family: var(--font-league-spartan);
+  }
+}
+
+.labels {
+  @apply text-navy-900 dark:text-white purple:text-yellow-300 flex justify-between text-xs font-bold mb-1 px-1;
+}
+
+.track {
+  @apply bg-gray-300 dark:bg-navy-900 purple:bg-purple-900 relative w-16 h-6 rounded-full cursor-pointer;
+}
+
+.thumb {
+  @apply bg-orange-700 dark:bg-red-600 purple:bg-cyan-500  absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300;
+}
+
+.keypad {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr) 1.2fr;
+  grid-template-areas:
+    "seven eight nine del"
+    "four five six plus"
+    "one two three minus"
+    "dot zero divide times"
+    "reset reset equals equals";
+}
+
+.keypad button {
+  @apply shadow-key relative h-12 overflow-hidden outline-none transition-all active:translate-y-0.5 active:shadow-none cursor-pointer transform rounded-md text-xl font-bold flex items-center justify-center py-2 px-1;
+}
+
+.number-type,
+.operator-type,
+.decimal_point-type {
+  @apply rounded-md dark:text-navy-750 bg-grey-200 shadow-grey-orange-450 text-gray-900 dark:bg-gray-200 dark:shadow-gray-orange-400 purple:text-yellow-300 purple:bg-purple-850 purple:shadow-purple-750 font-bold;
+}
+
+.equals-type {
+  @apply text-white bg-orange-700 shadow-orange-800 dark:text-white dark:bg-red-600 dark:shadow-red-800 purple:text-blue-950 purple:bg-cyan-500 purple:shadow-cyan-400;
+}
+
+.function-type {
+  @apply text-white bg-blue-500 shadow-blue-600 dark:text-white dark:bg-navy-700 dark:shadow-navy-800 purple:text-white purple:bg-purple-800 purple:shadow-purple-750;
+}
+
+.grid-area-one {
+  grid-area: one;
+}
+
+.grid-area-two {
+  grid-area: two;
+}
+
+.grid-area-three {
+  grid-area: three;
+}
+
+.grid-area-four {
+  grid-area: four;
+}
+
+.grid-area-five {
+  grid-area: five;
+}
+
+.grid-area-six {
+  grid-area: six;
+}
+
+.grid-area-seven {
+  grid-area: seven;
+}
+
+.grid-area-eight {
+  grid-area: eight;
+}
+
+.grid-area-nine {
+  grid-area: nine;
+}
+
+.grid-area-zero {
+  grid-area: zero;
+}
+
+.grid-area-plus {
+  grid-area: plus;
+}
+
+.grid-area-minus {
+  grid-area: minus;
+}
+
+.grid-area-times {
+  grid-area: times;
+}
+
+.grid-area-divide {
+  grid-area: divide;
+}
+
+.grid-area-del {
+  grid-area: del;
+}
+
+.grid-area-dot {
+  grid-area: dot;
+}
+
+.grid-area-reset {
+  grid-area: reset;
+}
+
+.grid-area-equals {
+  grid-area: equals;
+}
