@@ -29,7 +29,7 @@
   }
 
   /* NAVY - THEME 1 */
-  .navy {
+  [data-theme="dark"] {
     /* BACKGROUNDS */
     --main-bg: hsl(222, 26%, 31%); /* Navy 850 */
     --toggle-bg: hsl(223, 31%, 20%); /* Navy 900 */

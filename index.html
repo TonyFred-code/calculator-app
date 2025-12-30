@@ -9,9 +9,21 @@
     <script>
       (function () {
         try {
-          const stored = localStorage.getItem("calc_theme") || "navy";
+          const stored = localStorage.getItem("theme");
+          const prefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)"
+          ).matches;
 
-          document.documentElement.classList.add(stored);
+          const shouldUseDark = stored === "dark" || (!stored && prefersDark);
+          const shouldUsePurple = stored === "purple";
+
+          if (shouldUseDark) {
+            document.documentElement.dataset.theme = "dark";
+          } else if (shouldUsePurple) {
+            document.documentElement.dataset.theme = "purple";
+          } else {
+            document.documentElement.dataset.theme = "light";
+          }
         } catch (_) {}
       })();
     </script>

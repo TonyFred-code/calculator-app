@@ -26,7 +26,7 @@ const OPERAND_MODES = {
   WAITING_FIRST: "waiting_for_first_operand",
   TYPING_FIRST: "typing_first_operand",
 };
-
+const THEMES = ["light", "dark", "purple"];
 const BUTTON_KEY_MAPPING = [
   {
     value: 1,
@@ -147,4 +147,5 @@ export {
   BUTTON_KEY_MAPPING,
   BUTTON_CLASSES,
   OPERAND_MODES,
+  THEMES,
 };

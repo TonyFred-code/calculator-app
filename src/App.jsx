@@ -9,11 +9,18 @@ import {
   OPERATORS,
   SOFT_MAX_DISPLAY_CHAR_LENGTH,
   HARD_MAX_DISPLAY_CHAR_LENGTH,
+  THEMES,
 } from "./constants/calculator.js";
 import calculate from "./helpers/calculate.js";
 import { toast, ToastContainer } from "react-toastify";
 import formatDisplay from "./helpers/formatDisplay.js";
 import characterCounts from "./helpers/characterLimit.js";
+
+function getInitialThemeIndex() {
+  const theme = document.documentElement.dataset.theme;
+  const index = THEMES.indexOf(theme);
+  return index === -1 ? 0 : index;
+}
 
 export default function App() {
   const [firstOperand, setFirstOperand] = useState(0);
@@ -21,6 +28,8 @@ export default function App() {
   const [secondOperand, setSecondOperand] = useState(null);
   const [operator, setOperator] = useState(null);
   const [operandMode, setOperandMode] = useState(OPERAND_MODES.WAITING_FIRST);
+
+  const [themeIndex, setThemeIndex] = useState(getInitialThemeIndex());
 
   const resetCalculator = useCallback(() => {
     setDisplayedValue(INITIAL_DISPLAY);
@@ -344,6 +353,11 @@ export default function App() {
     resetCalculator,
   ]);
 
+  useEffect(() => {
+    document.documentElement.dataset.theme = THEMES[themeIndex];
+    localStorage.setItem("theme", THEMES[themeIndex]);
+  }, [themeIndex]);
+
   function getFontSize(len) {
     if (len <= 8) return "text-3xl";
     if (len <= 12) return "text-2xl";
@@ -357,23 +371,27 @@ export default function App() {
         {/* HEADER */}
         <div className="flex justify-between">
           <h1 className="text-3xl">calc</h1>
-          {/* <div className="flex gap-8 items-end">
-            <p className="text-sm font-bold uppercase">theme</p>
-            <div className="flex flex-col gap-1 relative">
-              <div className="text-sm flex justify-around -top-6 left-[10%] right-[10%] absolute  ">
-                {themes.map((theme) => {
-                  return <span key={theme.code}>{theme.code}</span>;
-                })}
-              </div>
-              <div className="w-20 rounded-full bg-screen-bg p-1.5 flex justify-evenly">
-                {themes.map((theme) => {
-                  return (
-                    <button className="rounded-full size-5 block bg-key-red-toggle-bg cursor-pointer"></button>
-                  ); })}
-              </div>
+          <div>
+            <p>theme</p>
+            <div className="relative w-48 h-10 bg-gray-300 rounded-full p-1 flex">
+              {/* Slider */}
+              <div
+                className="absolute top-1 left-1 h-8 w-1/3 bg-white rounded-full transition-transform duration-300"
+                style={{ transform: `translateX(${themeIndex * 100}%)` }}
+              />
+
+              {THEMES.map((theme, i) => (
+                <button
+                  key={theme}
+                  onClick={() => setThemeIndex(i)}
+                  className="relative z-10 w-1/3 text-sm font-semibold"
+                >
+                  {theme}
+                </button>
+              ))}
             </div>
-          </div> */}
-          {/* TODO: theme */}
+          </div>
+          {/* <ToggleTheme theme={theme} setTheme={setTheme} /> */}
         </div>
 
         {/* SCREEN */}
@@ -415,6 +433,7 @@ export default function App() {
         stacked={true}
         limit={10}
         autoClose={2500}
+        theme={THEMES[themeIndex] === "purple" ? "colored" : THEMES[themeIndex]}
       />
     </div>
   );
