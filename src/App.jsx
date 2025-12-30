@@ -11,6 +11,7 @@ import {
 } from "./constants/calculator.js";
 import calculate from "./helpers/calculate.js";
 import { toast, ToastContainer } from "react-toastify";
+import formatDisplay from "./helpers/formatDisplay.js";
 
 export default function App() {
   const [firstOperand, setFirstOperand] = useState(0);
@@ -313,17 +314,6 @@ export default function App() {
     inputDigit,
     resetCalculator,
   ]);
-
-  function formatDisplay(value) {
-    if (value === INITIAL_DISPLAY || value === OPERATORS.minus) return value;
-
-    if (value.match(/error/i)) return value;
-
-    const [int, dec] = value.split(".");
-    const formattedInt = new Intl.NumberFormat("en-US").format(int);
-
-    return dec !== undefined ? `${formattedInt}.${dec}` : `${formattedInt}`;
-  }
 
   return (
     <div className="min-h-screen bg-main-bg px-3 py-7 md:px-5 flex items-center justify-center text-[28px] md:text-[32px] text-white font-bold">
