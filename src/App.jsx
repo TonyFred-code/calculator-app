@@ -148,6 +148,19 @@ export default function App() {
   }, [firstOperand, operandMode, resetCalculator, displayedValue]);
 
   const inputDecimal = useCallback(() => {
+    if (displayedValue.match(/error/i)) {
+      if (operandMode === OPERAND_MODES.WAITING_FIRST) {
+        setOperandMode(OPERAND_MODES.TYPING_FIRST);
+        setDisplayedValue("0.");
+        setFirstOperand(0);
+      } else if (operandMode === OPERAND_MODES.WAITING_SECOND) {
+        setDisplayedValue("0.");
+        setOperandMode(OPERAND_MODES.TYPING_SECOND);
+        setSecondOperand(0);
+      }
+      return;
+    }
+
     if (displayedValue.includes(DECIMAL_POINT)) {
       toast("Operand has a decimal point");
       return;
