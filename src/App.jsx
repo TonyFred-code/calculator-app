@@ -33,9 +33,12 @@ export default function App() {
       const hasError = displayedValue.match(/error/i);
 
       if (
-        operandMode === OPERAND_MODES.TYPING_FIRST &&
-        !hasError &&
-        displayedValue.length >= MAX_DISPLAY_CHAR_LENGTH
+        (operandMode === OPERAND_MODES.TYPING_FIRST &&
+          !hasError &&
+          displayedValue.length >= MAX_DISPLAY_CHAR_LENGTH) ||
+        (operandMode === OPERAND_MODES.TYPING_SECOND &&
+          !hasError &&
+          displayedValue.length >= MAX_DISPLAY_CHAR_LENGTH)
       ) {
         toast("Maximum display characters length reached", {
           type: "info",
