@@ -87,7 +87,7 @@ export default function App() {
 
     if (operandMode === OPERAND_MODES.WAITING_SECOND) {
       setOperator(null);
-      setDisplayedValue(firstOperand);
+      setDisplayedValue(String(firstOperand));
       setOperandMode(OPERAND_MODES.TYPING_FIRST);
       return;
     }
