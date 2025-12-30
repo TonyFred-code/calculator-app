@@ -54,9 +54,13 @@ export default function App() {
         updatedDisplayValue = `${digit}`;
         updatedOperandMode = OPERAND_MODES.TYPING_FIRST;
       } else if (operandMode === OPERAND_MODES.WAITING_FIRST) {
+        if (Number(digit) === 0) return;
+
         updatedDisplayValue = `${digit}`;
         updatedOperandMode = OPERAND_MODES.TYPING_FIRST;
       } else if (operandMode === OPERAND_MODES.WAITING_SECOND) {
+        if (Number(digit) === 0) return;
+
         updatedDisplayValue = `${digit}`;
         updatedOperandMode = OPERAND_MODES.TYPING_SECOND;
       } else {
