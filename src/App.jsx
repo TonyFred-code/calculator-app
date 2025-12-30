@@ -10,6 +10,7 @@ import {
   OPERATORS,
 } from "./constants/calculator.js";
 import calculate from "./helpers/calculate.js";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function App() {
   const [firstOperand, setFirstOperand] = useState(0);
@@ -24,13 +25,20 @@ export default function App() {
     setSecondOperand(null);
     setOperator(null);
     setOperandMode(OPERAND_MODES.WAITING_FIRST);
+    toast.dismiss();
   }
 
   function inputDigit(digit) {
     const hasError = displayedValue.match(/error/i);
 
-    if (!hasError && displayedValue.length >= MAX_DISPLAY_CHAR_LENGTH) {
-      alert("Maximum display characters length reached");
+    if (
+      operandMode === OPERAND_MODES.TYPING_FIRST &&
+      !hasError &&
+      displayedValue.length >= MAX_DISPLAY_CHAR_LENGTH
+    ) {
+      toast("Maximum display characters length reached", {
+        type: "info",
+      });
       return;
     }
 
@@ -105,7 +113,9 @@ export default function App() {
 
   function inputDecimal() {
     if (displayedValue.length >= MAX_DISPLAY_CHAR_LENGTH) {
-      alert("Maximum display characters length reached");
+      toast("Maximum display characters length reached", {
+        type: "info",
+      });
       return;
     }
 
@@ -156,7 +166,9 @@ export default function App() {
 
     if (operandMode === OPERAND_MODES.WAITING_FIRST) {
       // alert user to input a number first;
-      alert("Input a number first!");
+      toast("Input the first operand first!!!", {
+        type: "info",
+      });
       return;
     }
 
@@ -183,6 +195,9 @@ export default function App() {
       } catch (error) {
         setDisplayedValue(error.message);
         setOperandMode(OPERAND_MODES.WAITING_FIRST);
+        toast(CALCULATION_ERROR, {
+          type: "error",
+        });
       }
     }
   }
@@ -200,6 +215,9 @@ export default function App() {
       } catch (error) {
         setDisplayedValue(error.message);
         setOperandMode(OPERAND_MODES.WAITING_FIRST);
+        toast(CALCULATION_ERROR, {
+          type: "error",
+        });
       }
     }
   }
@@ -243,7 +261,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-main-bg px-5 py-7 flex items-center justify-center text-[32px] text-white font-bold">
+    <div className="min-h-screen bg-main-bg px-3 py-7 md:px-5 flex items-center justify-center text-[28px] md:text-[32px] text-white font-bold">
       <div className="w-11/12 max-w-sm space-y-7 select-none">
         {/* HEADER */}
         <div className="flex justify-between">
@@ -301,6 +319,12 @@ export default function App() {
           })}
         </div>
       </div>
+      <ToastContainer
+        className={`text-lg`}
+        stacked={true}
+        limit={10}
+        autoClose={2500}
+      />
     </div>
   );
 }
