@@ -71,7 +71,7 @@
 }
 
 .keypad button {
-  @apply cursor-pointer shadow-button-key rounded-md text-xl flex items-center justify-center py-2 px-1;
+  @apply relative h-12 overflow-hidden outline-none transition-all active:translate-y-0.5 active:shadow-none cursor-pointer shadow-button-key transform rounded-md text-xl font-bold flex items-center justify-center py-2 px-1;
 }
 
 .number-type,
