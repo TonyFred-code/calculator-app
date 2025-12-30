@@ -228,8 +228,10 @@ export default function App() {
           type: "error",
         });
       }
+    } else if (operandMode === OPERAND_MODES.WAITING_SECOND) {
+      toast("Cannot perform incomplete operation", { type: "info" });
     }
-  }, [secondOperand, operator, firstOperand]);
+  }, [secondOperand, operator, firstOperand, operandMode]);
 
   function handleButtonClick(value) {
     switch (value) {
