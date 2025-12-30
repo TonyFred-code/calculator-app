@@ -27,5 +27,5 @@ export default function calculate(firstOperand, operator, secondOperand) {
       break;
   }
 
-  return Number(result).toFixed(SOFT_MAX_DISPLAY_CHAR_LENGTH);
+  return Number(result).toPrecision(SOFT_MAX_DISPLAY_CHAR_LENGTH);
 }
