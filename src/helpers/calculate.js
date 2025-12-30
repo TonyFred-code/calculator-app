@@ -1,4 +1,7 @@
-import { MAX_DISPLAY_CHAR_LENGTH, OPERATORS } from "../constants/calculator.js";
+import {
+  OPERATORS,
+  SOFT_MAX_DISPLAY_CHAR_LENGTH,
+} from "../constants/calculator.js";
 
 export default function calculate(firstOperand, operator, secondOperand) {
   let result = 0;
@@ -24,5 +27,5 @@ export default function calculate(firstOperand, operator, secondOperand) {
       break;
   }
 
-  return Number(result.toFixed(MAX_DISPLAY_CHAR_LENGTH));
+  return Number(result).toPrecision(SOFT_MAX_DISPLAY_CHAR_LENGTH);
 }
