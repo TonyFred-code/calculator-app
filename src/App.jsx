@@ -136,12 +136,10 @@ export default function App() {
 
     if (operandMode === OPERAND_MODES.WAITING_FIRST) {
       updatedOperandMode = OPERAND_MODES.TYPING_FIRST;
-      return;
     }
 
     if (operandMode === OPERAND_MODES.WAITING_SECOND) {
       updatedOperandMode = OPERAND_MODES.TYPING_SECOND;
-      return;
     }
 
     setDisplayedValue(updatedDisplayValue);
