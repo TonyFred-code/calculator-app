@@ -5,13 +5,15 @@ import {
   CALCULATION_ERROR,
   DECIMAL_POINT,
   INITIAL_DISPLAY,
-  MAX_DISPLAY_CHAR_LENGTH,
   OPERAND_MODES,
   OPERATORS,
+  SOFT_MAX_DISPLAY_CHAR_LENGTH,
+  HARD_MAX_DISPLAY_CHAR_LENGTH,
 } from "./constants/calculator.js";
 import calculate from "./helpers/calculate.js";
 import { toast, ToastContainer } from "react-toastify";
 import formatDisplay from "./helpers/formatDisplay.js";
+import characterCounts from "./helpers/characterLimit.js";
 
 export default function App() {
   const [firstOperand, setFirstOperand] = useState(0);
@@ -31,17 +33,32 @@ export default function App() {
 
   const inputDigit = useCallback(
     (digit) => {
+      const COUNTS = characterCounts(displayedValue);
       const hasError = displayedValue.match(/error/i);
 
       if (
         (operandMode === OPERAND_MODES.TYPING_FIRST &&
           !hasError &&
-          displayedValue.length >= MAX_DISPLAY_CHAR_LENGTH) ||
+          COUNTS.HARD_COUNT >= HARD_MAX_DISPLAY_CHAR_LENGTH) ||
         (operandMode === OPERAND_MODES.TYPING_SECOND &&
           !hasError &&
-          displayedValue.length >= MAX_DISPLAY_CHAR_LENGTH)
+          COUNTS.HARD_COUNT >= HARD_MAX_DISPLAY_CHAR_LENGTH)
       ) {
-        toast("Maximum display characters length reached", {
+        toast("Absolute display characters length reached", {
+          type: "warn",
+        });
+        return;
+      }
+
+      if (
+        (operandMode === OPERAND_MODES.TYPING_FIRST &&
+          !hasError &&
+          COUNTS.SOFT_COUNT >= SOFT_MAX_DISPLAY_CHAR_LENGTH) ||
+        (operandMode === OPERAND_MODES.TYPING_SECOND &&
+          !hasError &&
+          COUNTS.SOFT_COUNT >= SOFT_MAX_DISPLAY_CHAR_LENGTH)
+      ) {
+        toast("Significant digits display characters length reached", {
           type: "info",
         });
         return;
@@ -122,14 +139,26 @@ export default function App() {
   }, [firstOperand, operandMode, resetCalculator, displayedValue]);
 
   const inputDecimal = useCallback(() => {
-    if (displayedValue.length >= MAX_DISPLAY_CHAR_LENGTH) {
-      toast("Maximum display characters length reached", {
-        type: "info",
+    if (displayedValue.includes(DECIMAL_POINT)) {
+      toast("Operand has a decimal point");
+      return;
+    }
+
+    const COUNTS = characterCounts(displayedValue);
+
+    if (COUNTS.HARD_COUNT >= HARD_MAX_DISPLAY_CHAR_LENGTH) {
+      toast("Absolute display characters length reached", {
+        type: "warn",
       });
       return;
     }
 
-    if (displayedValue.includes(DECIMAL_POINT)) return;
+    if (COUNTS.SOFT_COUNT >= SOFT_MAX_DISPLAY_CHAR_LENGTH) {
+      toast("Maximum significant digits display characters length reached", {
+        type: "info",
+      });
+      return;
+    }
 
     let updatedDisplayValue = `${displayedValue}.`,
       updatedOperandMode = operandMode;
@@ -315,6 +344,13 @@ export default function App() {
     resetCalculator,
   ]);
 
+  function getFontSize(len) {
+    if (len <= 8) return "text-3xl";
+    if (len <= 12) return "text-2xl";
+    if (len <= 16) return "text-xl";
+    return "text-lg";
+  }
+
   return (
     <div className="min-h-screen bg-main-bg px-3 py-7 md:px-5 flex items-center justify-center text-[28px] md:text-[32px] text-white font-bold">
       <div className="w-11/12 max-w-sm space-y-7 select-none">
@@ -351,7 +387,7 @@ export default function App() {
             value={formatDisplay(displayedValue)}
             disabled={true}
             id="operands"
-            className="pointer-events-none p-4 bg-screen-bg text-white w-full text-end rounded-lg"
+            className={`pointer-events-none p-4 bg-screen-bg text-white w-full text-end rounded-lg ${getFontSize(displayedValue.length)}`}
           />
         </form>
 
