@@ -365,33 +365,38 @@ export default function App() {
     return "text-lg";
   }
 
+  function handleToggleClick(e) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+
+    if (x < rect.width / 3) setThemeIndex(0);
+    else if (x < (2 * rect.width) / 3) setThemeIndex(1);
+    else setThemeIndex(2);
+  }
+
   return (
     <div className="min-h-screen bg-main-bg px-3 py-7 md:px-5 flex items-center justify-center text-[28px] md:text-[32px] text-white font-bold">
       <div className="w-11/12 max-w-sm space-y-7 select-none">
         {/* HEADER */}
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <h1 className="text-3xl">calc</h1>
-          <div>
-            <p>theme</p>
-            <div className="relative w-48 h-10 bg-gray-300 rounded-full p-1 flex">
-              {/* Slider */}
-              <div
-                className="absolute top-1 left-1 h-8 w-1/3 bg-white rounded-full transition-transform duration-300"
-                style={{ transform: `translateX(${themeIndex * 100}%)` }}
-              />
+          <div className="flex items-end gap-5">
+            <p className="uppercase text-xs px-1.5">theme</p>
+            <div className="theme-toggle">
+              <div className="labels">
+                <span>1</span>
+                <span>2</span>
+                <span>3</span>
+              </div>
 
-              {THEMES.map((theme, i) => (
-                <button
-                  key={theme}
-                  onClick={() => setThemeIndex(i)}
-                  className="relative z-10 w-1/3 text-sm font-semibold"
-                >
-                  {theme}
-                </button>
-              ))}
+              <div className="track" onClick={handleToggleClick}>
+                <div
+                  className="thumb"
+                  style={{ transform: `translateX(${themeIndex * 20}px)` }}
+                />
+              </div>
             </div>
           </div>
-          {/* <ToggleTheme theme={theme} setTheme={setTheme} /> */}
         </div>
 
         {/* SCREEN */}
