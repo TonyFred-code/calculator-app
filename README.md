@@ -38,8 +38,7 @@ Solution Built:
 ### Links
 
 - Solution URL: [GitHub Source Code](https://github.com/TonyFred-code/calculator-app/)
-<!-- TODO: add live site url -->
-- Live Site URL: [Vercel Deployed Demo](https://example.com/)
+- Live Site URL: [Vercel Deployed Demo](https://calculator-app-black-rho.vercel.app/)
 
 ## Built with
 
@@ -48,7 +47,6 @@ Solution Built:
 - [React](https://reactjs.org/) - JS library
 - [TailwindCSS](https://tailwindcss.com/) - CSS framework
 - [Vite](https://vite.dev/) - Build Tool
-- [Motion](https://motion.dev/docs/react) - For animation
 
 ## Getting Started
 
@@ -64,13 +62,13 @@ To run this project locally, follow these steps:
 - Clone your fork of the repository:
 
 ```bash
-git clone https://github.com/yourusername/age-calculator-app.git
+git clone https://github.com/yourusername/calculator-app.git
 ```
 
 - Navigate to the project directory
 
 ```bash
-cd age-calculator-app
+cd calculator-app
 ```
 
 - Install dependencies
