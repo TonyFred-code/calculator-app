@@ -442,7 +442,7 @@ export default function App() {
         stacked={true}
         limit={10}
         autoClose={2500}
-        theme={THEMES[themeIndex] === "purple" ? "colored" : THEMES[themeIndex]}
+        theme={THEMES[themeIndex] === "purple" ? "dark" : THEMES[themeIndex]}
       />
     </div>
   );
