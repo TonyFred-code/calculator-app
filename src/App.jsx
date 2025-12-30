@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   BUTTON_CLASSES,
   BUTTON_KEY_MAPPING,
@@ -19,59 +19,62 @@ export default function App() {
   const [operator, setOperator] = useState(null);
   const [operandMode, setOperandMode] = useState(OPERAND_MODES.WAITING_FIRST);
 
-  function resetCalculator() {
+  const resetCalculator = useCallback(() => {
     setDisplayedValue(INITIAL_DISPLAY);
     setFirstOperand(null);
     setSecondOperand(null);
     setOperator(null);
     setOperandMode(OPERAND_MODES.WAITING_FIRST);
     toast.dismiss();
-  }
+  }, []);
 
-  function inputDigit(digit) {
-    const hasError = displayedValue.match(/error/i);
+  const inputDigit = useCallback(
+    (digit) => {
+      const hasError = displayedValue.match(/error/i);
 
-    if (
-      operandMode === OPERAND_MODES.TYPING_FIRST &&
-      !hasError &&
-      displayedValue.length >= MAX_DISPLAY_CHAR_LENGTH
-    ) {
-      toast("Maximum display characters length reached", {
-        type: "info",
-      });
-      return;
-    }
+      if (
+        operandMode === OPERAND_MODES.TYPING_FIRST &&
+        !hasError &&
+        displayedValue.length >= MAX_DISPLAY_CHAR_LENGTH
+      ) {
+        toast("Maximum display characters length reached", {
+          type: "info",
+        });
+        return;
+      }
 
-    let updatedDisplayValue,
-      updatedOperandMode = operandMode;
+      let updatedDisplayValue,
+        updatedOperandMode = operandMode;
 
-    if (hasError) {
-      resetCalculator();
-      updatedDisplayValue = `${digit}`;
-      updatedOperandMode = OPERAND_MODES.TYPING_FIRST;
-    } else if (operandMode === OPERAND_MODES.WAITING_FIRST) {
-      updatedDisplayValue = `${digit}`;
-      updatedOperandMode = OPERAND_MODES.TYPING_FIRST;
-    } else if (operandMode === OPERAND_MODES.WAITING_SECOND) {
-      updatedDisplayValue = `${digit}`;
-      updatedOperandMode = OPERAND_MODES.TYPING_SECOND;
-    } else {
-      updatedDisplayValue = `${displayedValue}${digit}`;
-    }
+      if (hasError) {
+        resetCalculator();
+        updatedDisplayValue = `${digit}`;
+        updatedOperandMode = OPERAND_MODES.TYPING_FIRST;
+      } else if (operandMode === OPERAND_MODES.WAITING_FIRST) {
+        updatedDisplayValue = `${digit}`;
+        updatedOperandMode = OPERAND_MODES.TYPING_FIRST;
+      } else if (operandMode === OPERAND_MODES.WAITING_SECOND) {
+        updatedDisplayValue = `${digit}`;
+        updatedOperandMode = OPERAND_MODES.TYPING_SECOND;
+      } else {
+        updatedDisplayValue = `${displayedValue}${digit}`;
+      }
 
-    if (updatedOperandMode === OPERAND_MODES.TYPING_FIRST) {
-      setFirstOperand(Number(updatedDisplayValue));
-    }
+      if (updatedOperandMode === OPERAND_MODES.TYPING_FIRST) {
+        setFirstOperand(Number(updatedDisplayValue));
+      }
 
-    if (updatedOperandMode === OPERAND_MODES.TYPING_SECOND) {
-      setSecondOperand(Number(updatedDisplayValue));
-    }
+      if (updatedOperandMode === OPERAND_MODES.TYPING_SECOND) {
+        setSecondOperand(Number(updatedDisplayValue));
+      }
 
-    setDisplayedValue(updatedDisplayValue);
-    setOperandMode(updatedOperandMode);
-  }
+      setDisplayedValue(updatedDisplayValue);
+      setOperandMode(updatedOperandMode);
+    },
+    [displayedValue, operandMode, resetCalculator]
+  );
 
-  function handleDel() {
+  const handleDel = useCallback(() => {
     if (operandMode === OPERAND_MODES.WAITING_FIRST) return;
 
     if (displayedValue.match(/error/i)) {
@@ -109,9 +112,9 @@ export default function App() {
     }
 
     setOperandMode(updatedOperandMode);
-  }
+  }, [firstOperand, operandMode, resetCalculator, displayedValue]);
 
-  function inputDecimal() {
+  const inputDecimal = useCallback(() => {
     if (displayedValue.length >= MAX_DISPLAY_CHAR_LENGTH) {
       toast("Maximum display characters length reached", {
         type: "info",
@@ -144,65 +147,68 @@ export default function App() {
     if (updatedOperandMode === OPERAND_MODES.TYPING_SECOND) {
       setSecondOperand(Number(updatedDisplayValue));
     }
-  }
+  }, [displayedValue, operandMode]);
 
-  function handleOperators(nextOperator) {
-    if (displayedValue === "-0" && nextOperator === OPERATORS.minus) {
-      setDisplayedValue(INITIAL_DISPLAY);
-      setFirstOperand(0);
-      setOperandMode(OPERAND_MODES.WAITING_FIRST);
-      return;
-    }
-
-    if (
-      nextOperator === OPERATORS.minus &&
-      operandMode === OPERAND_MODES.WAITING_FIRST
-    ) {
-      setDisplayedValue("-0");
-      setFirstOperand(-0);
-      setOperandMode(OPERAND_MODES.TYPING_FIRST);
-      return;
-    }
-
-    if (operandMode === OPERAND_MODES.WAITING_FIRST) {
-      // alert user to input a number first;
-      toast("Input the first operand first!!!", {
-        type: "info",
-      });
-      return;
-    }
-
-    if (operandMode === OPERAND_MODES.TYPING_FIRST) {
-      setOperator(nextOperator);
-      setOperandMode(OPERAND_MODES.WAITING_SECOND);
-      return;
-    }
-
-    if (operandMode === OPERAND_MODES.WAITING_SECOND) {
-      setOperator(nextOperator);
-      return;
-    }
-
-    if (firstOperand !== null && operator && secondOperand !== null) {
-      try {
-        const result = calculate(firstOperand, operator, secondOperand);
-
-        setFirstOperand(result);
-        setDisplayedValue(`${result}`);
-        setOperator(nextOperator);
-        setSecondOperand(null);
-        setOperandMode(OPERAND_MODES.WAITING_SECOND);
-      } catch (error) {
-        setDisplayedValue(error.message);
+  const handleOperators = useCallback(
+    (nextOperator) => {
+      if (displayedValue === "-0" && nextOperator === OPERATORS.minus) {
+        setDisplayedValue(INITIAL_DISPLAY);
+        setFirstOperand(0);
         setOperandMode(OPERAND_MODES.WAITING_FIRST);
-        toast(CALCULATION_ERROR, {
-          type: "error",
-        });
+        return;
       }
-    }
-  }
 
-  function handleEquals() {
+      if (
+        nextOperator === OPERATORS.minus &&
+        operandMode === OPERAND_MODES.WAITING_FIRST
+      ) {
+        setDisplayedValue("-0");
+        setFirstOperand(-0);
+        setOperandMode(OPERAND_MODES.TYPING_FIRST);
+        return;
+      }
+
+      if (operandMode === OPERAND_MODES.WAITING_FIRST) {
+        // alert user to input a number first;
+        toast("Input the first operand first!!!", {
+          type: "info",
+        });
+        return;
+      }
+
+      if (operandMode === OPERAND_MODES.TYPING_FIRST) {
+        setOperator(nextOperator);
+        setOperandMode(OPERAND_MODES.WAITING_SECOND);
+        return;
+      }
+
+      if (operandMode === OPERAND_MODES.WAITING_SECOND) {
+        setOperator(nextOperator);
+        return;
+      }
+
+      if (firstOperand !== null && operator && secondOperand !== null) {
+        try {
+          const result = calculate(firstOperand, operator, secondOperand);
+
+          setFirstOperand(result);
+          setDisplayedValue(`${result}`);
+          setOperator(nextOperator);
+          setSecondOperand(null);
+          setOperandMode(OPERAND_MODES.WAITING_SECOND);
+        } catch (error) {
+          setDisplayedValue(error.message);
+          setOperandMode(OPERAND_MODES.WAITING_FIRST);
+          toast(CALCULATION_ERROR, {
+            type: "error",
+          });
+        }
+      }
+    },
+    [displayedValue, firstOperand, operandMode, operator, secondOperand]
+  );
+
+  const handleEquals = useCallback(() => {
     if (firstOperand !== null && operator && secondOperand !== null) {
       try {
         const result = calculate(firstOperand, operator, secondOperand);
@@ -220,7 +226,7 @@ export default function App() {
         });
       }
     }
-  }
+  }, [secondOperand, operator, firstOperand]);
 
   function handleButtonClick(value) {
     switch (value) {
@@ -248,6 +254,59 @@ export default function App() {
         }
     }
   }
+
+  useEffect(() => {
+    function handleInputs(event) {
+      switch (event.key) {
+        case "1":
+        case "2":
+        case "3":
+        case "4":
+        case "5":
+        case "6":
+        case "7":
+        case "8":
+        case "9":
+        case "0":
+          inputDigit(event.key);
+          break;
+        case OPERATORS.plus:
+        case OPERATORS.times:
+        case OPERATORS.divide:
+        case OPERATORS.minus:
+          handleOperators(event.key);
+          break;
+        case "Backspace":
+          handleDel();
+          break;
+        case "Enter":
+          handleEquals();
+          break;
+        case DECIMAL_POINT:
+          inputDecimal();
+          break;
+        case "Escape":
+          resetCalculator();
+          break;
+        default:
+          return; // Quit when this doesn't handle the key event.
+      }
+
+      // Cancel the default action to avoid it being handled twice
+      event.preventDefault();
+    }
+
+    window.addEventListener("keydown", handleInputs);
+
+    return () => window.removeEventListener("keydown", handleInputs);
+  }, [
+    handleDel,
+    handleEquals,
+    handleOperators,
+    inputDecimal,
+    inputDigit,
+    resetCalculator,
+  ]);
 
   function formatDisplay(value) {
     if (value === INITIAL_DISPLAY || value === OPERATORS.minus) return value;
