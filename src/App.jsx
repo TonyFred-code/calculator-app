@@ -375,13 +375,17 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-main-bg px-3 py-7 md:px-5 flex items-center justify-center text-[28px] md:text-[32px] text-white font-bold">
+    <div className="min-h-screen bg-gray-200 dark:bg-navy-850 purple:bg-purple-950 px-3 py-7 md:px-5 flex items-center justify-center text-[28px] md:text-[32px] font-bold">
       <div className="w-11/12 max-w-sm space-y-7 select-none">
         {/* HEADER */}
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl">calc</h1>
+        <div className="flex justify-between items-center ">
+          <h1 className="text-3xl text-gray-900 dark:text-white purple:text-yellow-300">
+            calc
+          </h1>
           <div className="flex items-end gap-5">
-            <p className="uppercase text-xs px-1.5">theme</p>
+            <p className="uppercase text-xs px-1.5 text-gray-900 dark:text-white purple:text-yellow-300">
+              theme
+            </p>
             <div className="theme-toggle">
               <div className="labels">
                 <span>1</span>
@@ -410,12 +414,12 @@ export default function App() {
             value={formatDisplay(displayedValue)}
             disabled={true}
             id="operands"
-            className={`pointer-events-none p-4 bg-screen-bg text-white w-full text-end rounded-lg ${getFontSize(displayedValue.length)}`}
+            className={`pointer-events-none p-4 text-gray-900 bg-gray-100 dark:bg-navy-950 dark:text-white purple:text-yellow-300 purple:bg-purple-900 w-full text-end rounded-lg ${getFontSize(displayedValue.length)}`}
           />
         </form>
 
         {/* KEYPAD */}
-        <div className="keypad bg-keypad-bg grid gap-3 p-5 rounded-xl">
+        <div className="keypad bg-gray-300 dark:bg-navy-900 grid gap-3 p-5 rounded-xl purple:bg-purple-900">
           {BUTTON_KEY_MAPPING.map((buttonKey) => {
             const { value, type, area, symbol } = buttonKey;
 

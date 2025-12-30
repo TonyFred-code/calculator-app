@@ -2,24 +2,69 @@
 
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+@custom-variant purple (&:where([data-theme=purple], [data-theme=purple] *));
+
 @theme {
   /* ---- FONTS ---- */
   --font-league-spartan: "League Spartan", sans-serif;
 
   /* ---- COLORS ---- */
-  --color-main-bg: var(--main-bg);
-  --color-toggle-bg: var(--toggle-bg);
-  --color-keypad-bg: var(--keypad-bg);
-  --color-screen-bg: var(--screen-bg);
+  /* THEME 1 */
+  /* BACKGROUNDS */
+  --color-navy-850: hsl(222, 26%, 31%);
+  --color-navy-900: hsl(223, 31%, 20%);
+  --color-navy-950: hsl(224, 36%, 15%);
+  /* KEYS */
+  --color-navy-700: hsl(225, 21%, 49%);
+  --color-navy-800: hsl(224, 28%, 35%);
 
-  --color-function-key-bg: var(--function-key-bg);
+  --color-red-600: hsl(6, 63%, 50%);
+  --color-red-800: hsl(6, 70%, 34%);
 
-  --color-equals-key-red-bg: var(--equals-key-red-bg);
-  --color-toggle-knob-bg: var(--toggle-knob-bg);
+  --color-gray-200: hsl(0, 0%, 90%);
+  --color-gray-orange-400: hsl(28, 16%, 65%);
+  /* TEXT */
+  --color-navy-750: hsl(221, 14%, 31%);
+  --color-white: hsl(0, 100%, 100%);
 
-  --color-number-key-bg: var(--number-key-bg);
+  /* THEME 2 */
+  /* BACKGROUNDS */
+  --color-gray-200: hsl(0, 0%, 90%);
+  --color-gray-300: hsl(0, 5%, 81%);
+  --color-gray-100: hsl(0, 0%, 93%);
+  /*  KEYS */
+  --color-blue-500: hsl(185, 42%, 37%);
+  --color-blue-600: hsl(185, 58%, 25%);
 
-  --shadow-button-key: 0 2.8px 0 var(--button-key-shadow);
+  --color-orange-700: hsl(25, 98%, 40%);
+  --color-orange-800: hsl(25, 99%, 27%);
+
+  --color-grey-200: hsl(0, 0%, 90%);
+  --color-grey-orange-450: hsl(35, 11%, 61%);
+  /* TEXT */
+  --color-gray-900: hsl(60, 10%, 19%);
+
+  /* THEME 3 */
+  /* BACKGROUNDS */
+  --color-purple-950: hsl(268, 75%, 9%);
+  --color-purple-900: hsl(268, 71%, 12%);
+
+  /* KEYS */
+  --color-purple-800: hsl(281, 89%, 26%);
+  --color-purple-400: hsl(285, 91%, 52%);
+
+  --color-cyan-500: hsl(176, 100%, 44%);
+  --color-cyan-400: hsl(177, 92%, 70%);
+
+  --color-purple-850: hsl(268, 47%, 21%);
+  --color-purple-750: hsl(290, 70%, 36%);
+  /* TEXT */
+  --color-yellow-300: hsl(52, 100%, 62%);
+  --color-blue-950: hsl(198, 20%, 13%);
+
+  /* ---- BOX SHADOW ---- */
+  --shadow-key: 0 2.8px 0;
 }
 
 @layer base {
@@ -27,49 +72,18 @@
   body {
     font-family: var(--font-league-spartan);
   }
-
-  /* NAVY - THEME 1 */
-  [data-theme="dark"] {
-    /* BACKGROUNDS */
-    --main-bg: hsl(222, 26%, 31%); /* Navy 850 */
-    --toggle-bg: hsl(223, 31%, 20%); /* Navy 900 */
-    --keypad-bg: hsl(
-      223,
-      31%,
-      20%
-    ); /* Navy 900 -- i know it is the same color */
-    --screen-bg: hsl(224, 36%, 15%); /* Navy 950 */
-
-    /* KEYS */
-    --function-key-bg: hsl(225, 21%, 49%);
-    --equals-key-red-bg: hsl(6, 63%, 50%);
-    --toggle-knob-bg: hsl(6, 63%, 50%);
-    --number-key-bg: hsl(0, 0%, 90%);
-    --toggle-thumb: hsl(176, 100%, 44%);
-    /* TEXT */
-    /* -- */
-  }
-
-  /* GRAY - THEME 2 */
-  .gray {
-  }
-
-  /* PURPLE - THEME 3 */
-  .purple {
-  }
 }
 
 .labels {
-  @apply flex justify-between text-xs font-bold mb-1 px-1;
+  @apply text-navy-900 dark:text-white purple:text-yellow-300 flex justify-between text-xs font-bold mb-1 px-1;
 }
 
 .track {
-  @apply relative w-16 h-6 rounded-full bg-toggle-bg cursor-pointer;
+  @apply bg-gray-300 dark:bg-navy-900 purple:bg-purple-900 relative w-16 h-6 rounded-full cursor-pointer;
 }
 
 .thumb {
-  @apply absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300;
-  background-color: var(--toggle-thumb);
+  @apply bg-orange-700 dark:bg-red-600 purple:bg-cyan-500  absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300;
 }
 
 .keypad {
@@ -84,31 +98,21 @@
 }
 
 .keypad button {
-  @apply relative h-12 overflow-hidden outline-none transition-all active:translate-y-0.5 active:shadow-none cursor-pointer shadow-button-key transform rounded-md text-xl font-bold flex items-center justify-center py-2 px-1;
+  @apply shadow-key relative h-12 overflow-hidden outline-none transition-all active:translate-y-0.5 active:shadow-none cursor-pointer transform rounded-md text-xl font-bold flex items-center justify-center py-2 px-1;
 }
 
 .number-type,
 .operator-type,
 .decimal_point-type {
-  --button-key-shadow: hsl(28, 16%, 65%);
-
-  @apply rounded-md bg-number-key-bg text-main-bg font-bold;
+  @apply rounded-md dark:text-navy-750 bg-grey-200 shadow-grey-orange-450 text-gray-900 dark:bg-gray-200 dark:shadow-gray-orange-400 purple:text-yellow-300 purple:bg-purple-850 purple:shadow-purple-750 font-bold;
 }
 
 .equals-type {
-  --button-key-shadow: hsl(6, 70%, 34%);
-
-  @apply bg-equals-key-red-bg text-white;
+  @apply text-white bg-orange-700 shadow-orange-800 dark:text-white dark:bg-red-600 dark:shadow-red-800 purple:text-blue-950 purple:bg-cyan-500 purple:shadow-cyan-400;
 }
 
 .function-type {
-  --button-key-shadow: hsl(224, 28%, 35%);
-
-  @apply bg-function-key-bg text-white;
-}
-
-.operator-type {
-  @apply text-xl;
+  @apply text-white bg-blue-500 shadow-blue-600 dark:text-white dark:bg-navy-700 dark:shadow-navy-800 purple:text-white purple:bg-purple-800 purple:shadow-purple-750;
 }
 
 .grid-area-one {
